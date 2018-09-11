@@ -5,7 +5,9 @@ import android.location.Location;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * Created by QQ STEM on 30/07/2017.
+ */
 
 public class ProjectileSimulation
 {
@@ -40,29 +42,9 @@ public class ProjectileSimulation
         projectile.SetLaunchConditions(x,y,vx,vy,ax,ay);
 
         return projectile;
+
+
     }
-
-    public LocationVector ReturnInitialLocation(Projectile projectile, Launcher launcher, double screenHeight, double screenWidth, double gravityAcceleration)
-    {
-        this.screenHeight = screenHeight;
-        this.screenWidth = screenWidth;
-        double speed = springLengthChange * Math.sqrt((3 * launcher.SpringConstant())/projectile.getMass());
-        double releaseAngle = (Math.PI)/2 - launcher.BraceAngle();
-        double beamLength = launcher.BeamLength();
-        double releaseAltitiude = beamLength * Math.sin(launcher.BraceAngle()); //from base
-        double releaseXPosition = beamLength * (1 - Math.cos(launcher.BraceAngle()));
-
-        double x = releaseXPosition;
-        double y = screenHeight - releaseAltitiude;
-        double vx = speed * Math.cos(releaseAngle);
-        double vy = - speed * Math.sin(releaseAngle);
-        double ax = 0;
-        double ay = gravityAcceleration;
-
-        return new LocationVector(x,y,vx,vy,ax,ay);
-    }
-
-
 
 
     public Projectile GenerateLocations(Projectile projectile)
