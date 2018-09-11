@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
 
     }
- 
+
 
     class MyView extends View {
 
@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
 
                         if (braceAngle < 90)
                         {
-                            braceAngle = braceAngle - 1;
+                            braceAngle = braceAngle + 1;
                             valueChanged = true;
                             braceAngle = catapult.UpdateBraceAngle(braceAngle);
                         }
@@ -214,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
                     {
                         //spring length up - POWER UP
 
-                        braceAngle = braceAngle - 1;
+                        springLengthChange = springLengthChange + 1;
 
                         ps.springLengthChange = PowerScaleUp(springLengthChange);
                         valueChanged = true;
