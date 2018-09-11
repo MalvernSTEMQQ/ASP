@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="C:\Users\STEM PAD\AndroidStudioProjects\TouchExample\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="c82741bc129dd5f99f11a4ab8666ae24262053b6">
+        <dex dex="C:\Users\STEM PAD\AndroidStudioProjects\TouchExample\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run_a2af0af36bdcad4e7d7976f6ae750d7427c3777d\classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\STEM PAD\.android\build-cache\3cd88a107d82054c3239f72b702776e8cb25c39a\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="8694693636ab36910c8100ce527c258ff3ebece0">
+        <dex dex="C:\Users\STEM PAD\AndroidStudioProjects\TouchExample\app\build\intermediates\pre-dexed\debug\classes_c01470950ff018ab3121b0d670bfb39f42e7599a.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\STEM PAD\AndroidStudioProjects\TouchExample\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="e2552e97d442919167cb814127b0dc823cf5af55">
+        <dex dex="C:\Users\STEM PAD\AndroidStudioProjects\TouchExample\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_68b4a45fdb45a3b72ddefa82244808a6addf90ef\classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\STEM PAD\.android\build-cache\accc85a82b9a995c8557db4912d2c313e7967323\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="f21927d22fe31889ecce94dd697a2e75b137e0ef">
+        <dex dex="C:\Users\STEM PAD\AndroidStudioProjects\TouchExample\app\build\intermediates\pre-dexed\debug\classes_7614aa8faaf43da4d3b6cea219ff0d4a2aafdd7b.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\STEM PAD\.android\build-cache\3cd88a107d82054c3239f72b702776e8cb25c39a\output\jars\libs\internal_impl-20.0.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="e40b3078e3fbd353c9f44da8df25a8fc0078209d">
+        <dex dex="C:\Users\STEM PAD\AndroidStudioProjects\TouchExample\app\build\intermediates\pre-dexed\debug\internal_impl-20.0.0_906060fc468a87927ba71ae15568d08e63200d74.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\STEM PAD\AppData\Local\Android\Sdk\extras\android\m2repository\com\android\support\support-annotations\20.0.0\support-annotations-20.0.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="9d9013e9ff35fc3756411e62873c363c70c638fa">
+        <dex dex="C:\Users\STEM PAD\AndroidStudioProjects\TouchExample\app\build\intermediates\pre-dexed\debug\support-annotations-20.0.0_80cf6db97d0ccb198f902cac0d83db67ad12a779.jar" />
+    </item>
+
+</items>

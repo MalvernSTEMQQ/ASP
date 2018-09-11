@@ -1,0 +1,7 @@
+#Fri Apr 28 12:55:44 BST 2017
+base.0=C\:\\Users\\STEM PAD\\AndroidStudioProjects\\TouchExample\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run_a2af0af36bdcad4e7d7976f6ae750d7427c3777d
+renamed.1=classes.dex
+renamed.0=classes2.dex
+file.1=C\:\\Users\\STEM PAD\\AndroidStudioProjects\\TouchExample\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run-bootstrap_68b4a45fdb45a3b72ddefa82244808a6addf90ef\\classes.dex
+base.1=C\:\\Users\\STEM PAD\\AndroidStudioProjects\\TouchExample\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run-bootstrap_68b4a45fdb45a3b72ddefa82244808a6addf90ef
+file.0=C\:\\Users\\STEM PAD\\AndroidStudioProjects\\TouchExample\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run_a2af0af36bdcad4e7d7976f6ae750d7427c3777d\\classes.dex

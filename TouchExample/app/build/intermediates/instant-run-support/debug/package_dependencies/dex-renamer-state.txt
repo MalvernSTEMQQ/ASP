@@ -1,0 +1,13 @@
+#Mon Apr 10 10:21:41 BST 2017
+renamed.3=classes2.dex
+renamed.2=classes3.dex
+renamed.1=classes4.dex
+renamed.0=classes.dex
+base.3=C\:\\Users\\STEM PAD\\AndroidStudioProjects\\TouchExample\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\classes_c01470950ff018ab3121b0d670bfb39f42e7599a
+base.2=C\:\\Users\\STEM PAD\\AndroidStudioProjects\\TouchExample\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\internal_impl-20.0.0_906060fc468a87927ba71ae15568d08e63200d74
+base.1=C\:\\Users\\STEM PAD\\AndroidStudioProjects\\TouchExample\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\support-annotations-20.0.0_80cf6db97d0ccb198f902cac0d83db67ad12a779
+base.0=C\:\\Users\\STEM PAD\\AndroidStudioProjects\\TouchExample\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\classes_7614aa8faaf43da4d3b6cea219ff0d4a2aafdd7b
+file.3=C\:\\Users\\STEM PAD\\AndroidStudioProjects\\TouchExample\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\classes_c01470950ff018ab3121b0d670bfb39f42e7599a\\classes.dex
+file.2=C\:\\Users\\STEM PAD\\AndroidStudioProjects\\TouchExample\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\internal_impl-20.0.0_906060fc468a87927ba71ae15568d08e63200d74\\classes.dex
+file.1=C\:\\Users\\STEM PAD\\AndroidStudioProjects\\TouchExample\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\support-annotations-20.0.0_80cf6db97d0ccb198f902cac0d83db67ad12a779\\classes.dex
+file.0=C\:\\Users\\STEM PAD\\AndroidStudioProjects\\TouchExample\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\classes_7614aa8faaf43da4d3b6cea219ff0d4a2aafdd7b\\classes.dex

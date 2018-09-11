@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.touchexample.MainActivity" >
+    
+     <item
+        android:id="@+id/clear_display"
+        android:orderInCategory="101"
+        android:title="Clear Display"
+        app:showAsAction="never"/>
+
+</menu>

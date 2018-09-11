@@ -1,0 +1,133 @@
+LaunchActivity Log and Summary
+
+THINGS FOR STUDENTS TO PLAY WITH
+
+Colours of barriers
+	#added better colour control
+	#offer rgb via paint
+	
+Fix the up buttons etc 
+	Make the code inside the buttons something like 'variables = buttonVariableUP'
+	Then have them all read the same? 
+	#FOR REAL VERSION: sort out the if statement chains with some tidier logic.
+		//Now checks if within rectangle found in buttonmap of button rectangles
+Add levels to the end
+
+
+
+HACKS
+Added in a springlengthchange power factor - scales 14-16 to 10-20, to give a wider possible field of usuable numbers
+	Implementation of this is arguably poor, and could be made better. Current powerscales up most of the time, make it
+	so it scales down less of the time????
+
+
+
+TODO
+
+Documents
+	Make some help sheets
+	Update the presentation
+	
+VARIATION
+	Now branched into Student version
+		Has a slightly nicer power distribution - y = 0.14x^2 up to 10, then the previous scaler after
+		Possibly update to a cubic easing function
+	Removed clutter
+	Made some variables more easy to shift
+	
+
+
+Win/Loss Conditions
+	//Added Messages
+	//Added levels
+	//Add Max level details
+		#When you complete the final level, the text changes to say solver
+		#Count appears alongside saying what your highest level is
+	//Add something to say you've reached the final level
+	//Off edge of screen on RHS == win
+
+
+
+Draw initial Catapult
+	//Drawn line from catapult start position to angle of release
+		Flesh it out
+		Make it move on release
+			To rotate around the pivot point
+			x = Rsin(theta)
+			y = Rcos(theta)  for theta = 0:LaunchAngle/100:LaunchAngle
+	//Draw expected direction
+		//Added dashed line predicting initial direction of flight
+	
+	
+Collision with barriers improved
+	//Added rounding of edges with centre of projectile
+	//Corrected top/left values in collision checking
+	//Checks over list of all barriers
+	//26,16 crashes - why? - error with barrier calculations
+	
+Levels
+	//Added first 3 levels manually
+	//Added floor to prevent early win conditiosn reached
+	#get kids to add more levels	
+		//Find a way to have perma-floors!!!!
+		//Don't have any floors by default; just have an added floor barrier for each barrier
+		#List adds on floors to all levels regardless. If dupe, not too big a deal.
+	
+	
+Better Icon?? - some bmp based catapult image? 
+
+
+
+
+In Game Controls
+	//Added angle buttons
+	//Added power buttons
+	//Added Text descriptors
+	Hold down increments variable?	
+	
+Calculations #Long Term
+	Rework calculations to be able to handle areas of interest 
+		#Areas which increase speed
+		#Areas which change gravity
+	
+	Add Wind, drag -> force balances in the equations
+		
+	Have gravity an easily changable values	
+		Offer planets gravity values
+		Change backdrop
+		
+UI #Long Term
+	Splash Screen
+	Menu Button
+	Data stored locally
+	Make buttons rounded rectangles - or something nicer - something which can be dragged up?
+		
+Gameplay #Long Term
+	Different modes
+		Set Number of projectiles
+		Freeplay - no limit
+		
+		Would need different obstacle layouts
+		
+	Barrier list creation
+		-Tie in with random map maker
+	
+			ArrayList<ArrayList<Barrier>> testArray = new ArrayList<ArrayList<Barrier>>(){{
+                add(new ArrayList<Barrier>(){{
+                    add(new Barrier(1,2,3,4));
+                    add(new Barrier(2,3,4,5));
+                }});
+               
+                add(new ArrayList<Barrier>(){{
+                    add(new Barrier(3,4,5,6));
+                    add(new Barrier(4,5,6,7));
+                }});
+                
+            }};
+	
+		
+		
+	Produce a random map generator
+		Produce map solver 
+			Use the range of powers/elevations to produce a percentage chance of winning; 
+		
