@@ -1,8 +1,6 @@
 package com.example.launchexample;
 
-/**
- * Created by QQ STEM on 30/07/2017.
- */
+
 
 import android.location.Location;
 
@@ -11,9 +9,14 @@ import java.util.List;
 
 public class Projectile {
     private double mass = 1; //by default
+    private double TIMESTEP = 0.1;
 
     private int radius = 30;
     private  List locations;
+
+    public Boolean verticalBoost = false;
+
+    private LocationVector location;
 
     public int getRadius()
     {
@@ -76,6 +79,48 @@ public class Projectile {
         return currentLocation;
     }
 
+    public void SetFirstLocation(LocationVector firstLocation)
+    {
+        location = firstLocation;
+    }
+
+    public LocationVector GetFirstLocation()
+    {
+        return location;
+    }
+
+    public LocationVector GetNextLocation()
+    {
+
+        location = CalculateNextLocation(location);
+        return location;
+    }
+
+    private LocationVector CalculateNextLocation(LocationVector initialLocation)
+    {
+
+        double x = initialLocation.x + initialLocation.vx * TIMESTEP;
+        double y = initialLocation.y + initialLocation.vy * TIMESTEP;
+
+        double vx = initialLocation.vx + initialLocation.ax * TIMESTEP;
+        double vy;
+        if(verticalBoost)
+        {
+            vy = initialLocation.vy + initialLocation.ay * TIMESTEP - 5;
+            verticalBoost = false;
+        }
+        else
+        {
+            vy = initialLocation.vy + initialLocation.ay * TIMESTEP;
+        }
+        double ax = initialLocation.ax;
+        double ay = initialLocation.ay;
+
+        LocationVector endLocation = new LocationVector(x,y,vx,vy,ax,ay);
+        return endLocation;
+    }
+
+
     public void AddPositionData(LocationVector location)
     {
         LocationVector tempLocation = location;
@@ -114,4 +159,31 @@ public class Projectile {
         locations.clear();
         locations.add(firstLocation);
     }
+
+    private Boolean CollisionCalculator(LocationVector location, int radius, Barrier barrier)
+    {
+
+        Boolean collided = barrier.IncludesLocation(location.x, location.y, radius);
+
+        return collided;
+    }
+
+    //check to see what it collides with
+    public int CheckForCollisions(LocationVector projectileLocation, List<Barrier> barriers, int radius)
+    {
+        int collisionIndex = 0;
+
+        for (Barrier barrier : barriers)
+        {
+            if (CollisionCalculator(projectileLocation, radius, barrier)) {
+                collisionIndex = barrier.GetType();
+                break;
+            }
+        }
+
+
+        return collisionIndex;
+    }
+
+
 }

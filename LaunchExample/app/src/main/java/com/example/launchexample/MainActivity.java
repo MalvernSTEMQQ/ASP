@@ -42,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
         public Paint textPaint;
         public Paint innerButtonPaint;
         public Paint outerButtonPaint;
+        public Paint innerProjPaint;
+        public Paint outerProjPaint;
         public Paint predicterPaint;
         public Paint catapultPaint;
 
@@ -49,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
         public String failureString;
         public String completionString;
 
+
+        private double percentage;
 
         private int w;
         private int h;
@@ -74,9 +78,9 @@ public class MainActivity extends AppCompatActivity {
         //HOW DO CHANGING THESE AFFECT THINGS
 
         public double springConstant = 34;
-        public double braceAngle = 15;
+        public double braceAngle = 65;
         public double beamLength = 100;
-        public double springLengthChange = 15;
+        public double springLengthChange = 10;
 
         private double gravityAcceleration = 9.81;
 
@@ -103,6 +107,8 @@ public class MainActivity extends AppCompatActivity {
         Launcher catapult = new Launcher(validator(springConstant,1,1000),
                 validator(braceAngle,0,90),validator(beamLength,1,500));
         Projectile projectile = new Projectile();
+
+        BarrierList barrierList = new BarrierList();
 
 
 
@@ -137,7 +143,12 @@ public class MainActivity extends AppCompatActivity {
 
             //currently these Button paints are identical to the other inner/outer paints. How could you change the colour of just the Buttons?
             innerButtonPaint = new Paint(innerPaint);
+            innerButtonPaint.setColor(Color.rgb(192,192,192));
             outerButtonPaint = new Paint(outerPaint);
+
+            innerProjPaint = new Paint(innerPaint);
+            innerProjPaint.setColor(Color.rgb(64,43,253));
+            outerProjPaint = new Paint(outerPaint);
 
             predicterPaint = new Paint();
             predicterPaint.setColor(Color.RED);
@@ -156,9 +167,9 @@ public class MainActivity extends AppCompatActivity {
 
 
             //SET UP STRINGS
-            successString = "SUCCESS";
-            failureString = "FAILURE";
-            completionString = "COMPLETE VICTORY";
+            successString = "Congratulations - Level Complete";
+            failureString = "Collision - Level Failed";
+            completionString = "Congratulations - All Levels Completed!";
 
 
             mass = projectile.getMass();
@@ -181,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
 
                     if(InsideRectangle( buttonMap.get("LoadButton"), eventX, eventY))
                     {
-                        LoadProjectile();
+                        LoadProjectile2();
                     }
                     else if(InsideRectangle(buttonMap.get("FireButton"), eventX, eventY))
                     {
@@ -193,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
 
                         if (braceAngle < 90)
                         {
-                            braceAngle = braceAngle - 1;
+                            braceAngle = braceAngle + 1;
                             valueChanged = true;
                             braceAngle = catapult.UpdateBraceAngle(braceAngle);
                         }
@@ -214,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
                     {
                         //spring length up - POWER UP
 
-                        braceAngle = braceAngle - 1;
+                        springLengthChange = springLengthChange + 1;
 
                         ps.springLengthChange = PowerScaleUp(springLengthChange);
                         valueChanged = true;
@@ -240,14 +251,146 @@ public class MainActivity extends AppCompatActivity {
                         setCatapultLine();
                     }
 
+                    break;
             }
             return true;
         }
 
 
 
-        //on canvas draw
+        //on canvas draw - restructuring
         protected void onDraw(Canvas c)
+        {
+            int w = getWidth();
+            int h = getHeight();
+
+            if(textSize == 0)
+            {
+                textSize = textPaint.getTextSize();
+                textSize *=3;
+                textPaint.setTextSize(textSize);
+            }
+
+            //region Draw Objects
+
+            //draw Barriers
+            for(int i = 0; i < barriers.size(); i++)
+            {
+                Barrier barrier = barriers.get(i);
+                drawBarrier(c, barrier);
+            }
+
+            //draw Catapult Line
+            c.drawLines(catapultLine, catapultPaint);
+            c.drawPath(projectedLine, predicterPaint);
+
+            //draw Buttons
+            drawRect(c, LoadButton);
+            c.drawText("Load", 440, h-65, textPaint);
+
+            drawRect(c, FireButton);
+
+            drawRect(c, AngleUpButton);
+            drawRect(c, AngleDownButton);
+            drawRect(c, SpringLengthUpButton);
+            drawRect(c, SpringLengthDownButton);
+
+            c.drawText("Angle", 1005, h - 115, textPaint);
+            c.drawText("Power", 1130, h - 115, textPaint);
+
+            c.drawText("Angle " + (int) braceAngle + "   Power " + (int) validator(springLengthChange,1,1000), 20, 80, textPaint);
+            c.drawText("Level " + (currentLevel + 1) + "  Max Level " + maxLevel, 20, 120, textPaint);
+
+            if(messageString != null)
+            {
+                c.drawText(messageString, 20, 160, textPaint);
+            }
+            //endregion
+
+            //Boolean inMotion = true; //replaced by fire
+            int collisionIndex;
+
+            if(load)
+            {
+                c.drawText("Fire", 655, h-65, textPaint);
+                drawCircle(c, projectile.GetFirstLocation(), radius, 2, innerProjPaint, outerProjPaint);
+                c.drawText((int) projectile.GetFirstLocation().x + " " + (int) projectile.GetFirstLocation().y,20,40,textPaint);
+
+                c.drawText(percentage + "%",20,200,textPaint);
+            }
+            if(fire)
+            {
+                load = false;
+
+                //get new location
+                LocationVector currentLocation = projectile.GetNextLocation();
+
+                // check if in barrier
+                collisionIndex = projectile.CheckForCollisions(currentLocation, barriers, radius);
+
+
+                //ISSUE: Winning as soon as win zone is touched - regardless of whether it will then hit a barrier
+                //for a glancing blow
+                switch (collisionIndex) {
+                    case 0:
+                        //no collision, continue
+                        break;
+
+                    case 1:
+                        //game won
+                        fire = false;
+                        messageString = successString;
+                        maxLevel = currentLevel;
+                        //if not at end of levels, go to next level
+                        if (currentLevel != barrierLevels.size() - 1)
+                        {
+                            messageString = successString;
+
+                            currentLevel++;
+                        }
+                        else //go to first level
+                        {
+                            messageString = completionString;
+                            currentLevel = 0;
+                        }
+
+                        barriers = barrierLevels.get(currentLevel);
+
+                        break;
+
+                    case 2:
+                        //solid collision
+                        fire = false;
+                        messageString = failureString;
+
+                        break;
+                    case 3:
+                        //Vertical Boost
+                        projectile.verticalBoost = true;
+                        break;
+                    default:
+                        //shouldn't be anything else at the moment
+
+                        break;
+                }
+
+
+                //draw circle
+
+                drawCircle(c, currentLocation, radius, 2, innerProjPaint, outerProjPaint);
+                c.drawText((int) currentLocation.x + " " + (int) currentLocation.y,20,40,textPaint);
+            }
+
+
+
+
+            postInvalidateDelayed(0);
+        }
+
+
+
+        //on canvas draw
+        protected void onDraw1(Canvas c)
         {
             int w = getWidth();
             int h = getHeight();
@@ -264,8 +407,8 @@ public class MainActivity extends AppCompatActivity {
             //draw Barriers
             for (int i = 0; i < barriers.size(); i++)
             {
-                Barrier barrier = (Barrier) barriers.get(i);
-                drawBarrier(c,barrier.GetBarrierShape());
+                Barrier barrier = barriers.get(i);
+                drawBarrier(c, barrier);
             }
 
 
@@ -307,7 +450,7 @@ public class MainActivity extends AppCompatActivity {
                 c.drawText("Fire", 655, h-65, textPaint);
                 LocationVector initialLoc = projectile.GetCurrentLocation(0);
 
-                drawCircle(c, initialLoc, radius,2, innerPaint, outerPaint);
+                drawCircle(c, initialLoc, radius,2, innerProjPaint, outerProjPaint);
                 c.drawText((int) initialLoc.x + " " + (int) initialLoc.y, 20, 40, textPaint);
             }
 
@@ -349,7 +492,7 @@ public class MainActivity extends AppCompatActivity {
                     //plot current location, keep going
                     LocationVector currentLoc = projectile.GetCurrentLocation(it);
 
-                    drawCircle(c,currentLoc,radius,2, innerPaint, outerPaint);
+                    drawCircle(c,currentLoc,radius,2, innerProjPaint, outerProjPaint);
 
                     c.drawText((int) currentLoc.x + " " + (int) currentLoc.y, 20, 40, textPaint);
                     it++;
@@ -381,6 +524,91 @@ public class MainActivity extends AppCompatActivity {
 
             setCatapultLine(initialX,initialY,finalX,finalY);
             setProjectedLine(finalX,finalY,endX,endY);
+        }
+
+
+        //load projectile method for generating on the fly
+        private void LoadProjectile2()
+        {
+            load = true;
+            fire = false;
+
+            double yHeight = getHeight();
+            double xWidth = getWidth();
+
+
+            //PercentageCompletable();
+
+            projectile.SetFirstLocation(ps.ReturnInitialLocation(projectile, catapult, yHeight,xWidth,validator(gravityAcceleration, -10000,10000)));
+
+
+        }
+
+        //finds what percentage of start conditions can win the game
+        private void PercentageCompletable()
+        {
+            double count = 0;
+            double winCount = 0;
+            double lossCount = 0;
+
+            ProjectileSimulation testPS = new ProjectileSimulation(PowerScaleUp(springLengthChange));
+            Projectile testProj = new Projectile(mass);
+
+            Launcher testLauncher = new Launcher(34,1,100);
+
+            for(int angle = 1; angle < 90; angle++)
+            {
+                testLauncher.UpdateBraceAngle(angle);
+                for(int power = 1; power < 100; power++)
+                {
+                    count++;
+
+                    testPS.setSpringLengthChange(PowerScaleUp(power));
+
+                    testProj.SetFirstLocation(testPS.ReturnInitialLocation(testProj, testLauncher, getHeight(), getWidth(), validator(gravityAcceleration, -10000,10000)));
+
+                    Boolean testFiring = true;
+                    int testIndex;
+
+                    //enter a model run through - basically do the calculations to win for each angle/power
+
+                    while(testFiring)
+                    {
+                        LocationVector currentLocation = testProj.GetNextLocation();
+                        testIndex = testProj.CheckForCollisions(currentLocation,barriers,radius);
+
+                        switch(testIndex)
+                        {
+                            case 0:
+                                //no collision, cont
+                                break;
+                            case 1:
+                                //won
+                                winCount++;
+                                testFiring = false;
+                                break;
+                            case 2:
+                                //solid collision
+                                lossCount++;
+                                testFiring = false;
+                                break;
+                            case 3:
+                                //Vertical Boost
+                                testProj.verticalBoost = true;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+
+
+                }
+            }
+
+            percentage = 100 * winCount/count;
+
+
+
         }
 
         private void LoadProjectile()
@@ -438,7 +666,9 @@ public class MainActivity extends AppCompatActivity {
 
             currentLevel = 0;
 
-            barrierLevels = getBarrierList();
+            barrierList.updateSizes(h,w);
+
+            barrierLevels = FinishBarrierList(barrierList.getBarriers());
             barriers = barrierLevels.get(currentLevel);
 
             setCatapultLine();
@@ -462,16 +692,19 @@ public class MainActivity extends AppCompatActivity {
 
             super.onSizeChanged(w,h,oldw,oldh);
         }
-        protected void drawBarrier(Canvas c, RectF barrier)
+
+
+        protected void drawBarrier(Canvas c, Barrier barrier)
         {
-            c.drawRect(barrier, outerPaint); //draw outside in black
-            RectF intBarrier = new RectF(barrier);
+            c.drawRect(barrier.GetBarrierShape(), barrier.GetOutsideColor());
+            RectF intBarrier = new RectF(barrier.GetBarrierShape());
             intBarrier.left += 10;
             intBarrier.top += 10;
             intBarrier.right -= 10;
             intBarrier.bottom -= 10;
 
-            c.drawRect(intBarrier, innerPaint);
+            c.drawRect(intBarrier, barrier.GetInsideColor());
+
         }
 
         ///draws rectangle with specified border width
@@ -511,102 +744,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-
-        protected ArrayList<ArrayList<Barrier>> getBarrierList()
-        {
-
-            //initEndWall = new Barrier(w - 200, -10, 100, 400);
-            //scndEndWall = new Barrier(w - 200, h - 290, 100, 300);
-
-            final ArrayList<Barrier> levelOneBarriers = new ArrayList<Barrier>(){{
-                add(new Barrier(w - 200, -10, 100, 400));
-                add(new Barrier(w - 200, h - 290, 100, 300));
-                //  add(new Barrier(0, h + radius, w, 1));
-            }};
-
-            final ArrayList<Barrier> levelTwoBarriers = new ArrayList<Barrier>(){{
-                add(new Barrier(w - 200, -10, 100, 400));
-                add(new Barrier(w - 200, h - 290, 100, 300));
-                // add(new Barrier(0, h + radius, w, 1));
-                add(new Barrier(w - 600, h - 800, 200, 200));
-            }};
-
-            final ArrayList<Barrier> levelThreeBarriers = new ArrayList<Barrier>(){{
-                add(new Barrier(w - 200, -10, 100, 300));
-                add(new Barrier(w - 200, h - 190, 100, 200));
-                add(new Barrier(w - 200, h - 490, 100, 100));
-                //add(new Barrier(0, h + radius, w, 1));
-            }};
-
-            final ArrayList<Barrier> levelFourBarriers = new ArrayList<Barrier>(){{
-                add(new Barrier(w - 200, - 10, 100, 200));
-                add(new Barrier(w - 200, 400, 100, 200));
-                add(new Barrier(w - 200, 800, 100, 200));
-            }};
-
-            final ArrayList<Barrier> levelFiveBarriers = new ArrayList<Barrier>(){{
-                add(new Barrier(w - 200, -10, 100, 400));
-                add(new Barrier(w - 200, h - 290, 100, 300));
-                add(new Barrier(w - 400, 300, 100, 200));
-            }};
-
-            final ArrayList<Barrier> levelSixBarriers = new ArrayList<Barrier>(){{
-                add(new Barrier(w - 200, -10, 100, 300));
-                add(new Barrier(w - 400, -10, 100, 400));
-                add(new Barrier(w - 200, h - 490, 100, 100));
-                add(new Barrier(w - 400, h - 490, 100, 500));
-            }};
-
-            final ArrayList<Barrier> levelSevenBarriers = new ArrayList<Barrier>(){{
-                add(new Barrier(w - 200, -10, 100, 700));
-                add(new Barrier(800, 500, 200, 200));
-            }};
-
-            final ArrayList<Barrier> levelEightBarriers = new ArrayList<Barrier>(){{
-                add(new Barrier(w - 200, -10, 100, 750));
-                add(new Barrier(800, 300, 200, 400));
-            }};
-
-            final ArrayList<Barrier> levelNineBarriers = new ArrayList<Barrier>(){{
-                add(new Barrier(w - 200, -10, 100, 750));
-                add(new Barrier(800, 300, 200, 400));
-                add(new Barrier(w - 200, h - 100, 100, 110));
-            }};
-
-            final ArrayList<Barrier> levelTenBarriers = new ArrayList<Barrier>(){{
-                add(new Barrier(w - 200, -10, 100, 450));
-                add(new Barrier(800, 300, 100, h - 500));
-                add(new Barrier(w - 200, h - 400, 100, 410));
-            }};
-
-
-
-            ArrayList<ArrayList<Barrier>> AllBarriers = new ArrayList<ArrayList<Barrier>>(){{
-                add(levelOneBarriers);
-                add(levelTwoBarriers);
-                add(levelThreeBarriers);
-                add(levelFourBarriers);
-                add(levelFiveBarriers);
-                add(levelSixBarriers);
-                add(levelSevenBarriers);
-                add(levelEightBarriers);
-                add(levelNineBarriers);
-                add(levelTenBarriers);
-            }};
-
-            return BarrierList(AllBarriers);
-        }
-
-        protected ArrayList<ArrayList<Barrier>> BarrierList(ArrayList<ArrayList<Barrier>> allLevels)
+        protected ArrayList<ArrayList<Barrier>> FinishBarrierList(ArrayList<ArrayList<Barrier>> allLevels)
         {
             //ArrayList<ArrayList<Barrier>> returnBarriers = allLevels;
-            Barrier baseBarrier = new Barrier(0, h + radius, w, 10000);
-            Barrier capBarrier = new Barrier(w, -10000, 1000000, 10000);
+            Barrier baseBarrier = new Barrier(0, h + radius, w, 10000, 2);
+            Barrier capBarrier = new Barrier(w, -10000, 1000000, 10000, 2);
+            Barrier winZone = new Barrier(w - 100, 0, 100, h, 1);
             boolean first = true;
 
             for (ArrayList<Barrier> levelList: allLevels)
             {
                 levelList.add(baseBarrier);
+                levelList.add(winZone);
 
                 if(first)
                 {
@@ -618,38 +767,6 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             }
-//
-//
-//            for(int i = 0; i < allLevels.size(); i++)
-//                if(!allLevels.get(i).contains(baseBarrier))
-//                {
-//                    ArrayList<Barrier> levelSpec = allLevels.get(i);
-//                    levelSpec.add(baseBarrier);
-//
-//                    returnBarriers.remove(allLevels.get(i));
-//                    returnBarriers.add(levelSpec);
-//                }
-
-
-
-//            for (ArrayList<Barrier> levelBarrier: allBarriers) {
-//
-//                if(!levelBarrier.contains(baseBarrier))
-//                {
-//
-//                }
-//                for (Barrier b: levelBarrier) {
-//
-//                }
-//
-//
-//            }
-//
-//
-//            for (int i = 0; i < allBarriers.size(); i++)
-//            {
-//                boolean testBool = allBarriers.contains(baseBarrier);
-//            }
 
             return allLevels;
         }
